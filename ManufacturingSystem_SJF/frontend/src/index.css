@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. "static" keeps every variable in the output so the plain CSS
+  below (hazard stripe) can use them too.
+*/
+@theme static {
+  /* Bahnschrift is the DIN-style face that ships with Windows; other systems fall back. */
+  --font-sans: "Bahnschrift", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  --color-plate: #dde2e6;        /* page background: brushed steel */
+  --color-panel: #f6f7f8;        /* panel surface */
+  --color-ink: #1d2733;          /* text, rules, header */
+  --color-steel: #566370;        /* secondary text */
+  --color-line: #b4bdc5;         /* thin dividers */
+  --color-hazard: #f2b705;       /* safety yellow */
+  --color-hazard-dark: #d9a300;
+  --color-alert: #b42318;        /* destructive actions and errors */
+  --color-alert-soft: #fdecea;
+  --color-belt-a: #2b5876;       /* Gantt blocks, alternating so neighbours stay distinct */
+  --color-belt-b: #3b7396;
+}
+
+@layer base {
+  body {
+    @apply bg-plate font-sans text-ink antialiased;
+    font-variant-numeric: tabular-nums; /* digits line up in tables and readouts */
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Flat, hard-edged equipment panel */
+  .panel {
+    @apply border border-line bg-panel;
+  }
+
+  .panel-head {
+    @apply flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b-2 border-ink px-4 py-3;
+  }
+
+  .panel-title {
+    @apply text-lg font-bold;
+  }
+
+  .field {
+    @apply w-full border-2 border-ink bg-white px-3 py-2 text-base text-ink placeholder:text-steel/70 disabled:bg-plate disabled:text-steel;
+  }
+
+  .field[aria-invalid="true"] {
+    @apply border-alert;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 border-2 border-ink px-4 py-2 text-base font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .btn-primary {
+    @apply bg-hazard text-ink enabled:hover:bg-hazard-dark;
+  }
+
+  .btn-secondary {
+    @apply bg-panel text-ink enabled:hover:bg-plate;
+  }
+
+  .btn-danger {
+    @apply border-alert bg-panel text-alert enabled:hover:bg-alert-soft;
+  }
+
+  /* Black and yellow warning tape, the one loud element on the page */
+  .hazard-stripe {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-hazard) 0 14px,
+      var(--color-ink) 14px 28px
+    );
+  }
+}
